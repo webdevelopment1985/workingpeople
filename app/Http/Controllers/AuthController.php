@@ -102,9 +102,10 @@ class AuthController extends Controller
             'password' => $request->password
         ]);
 
-        $validatedData = $request->validate([
-            'g-recaptcha-response' => 'required|captcha'
-        ]);
+        // $validatedData = $request->validate([
+        //     'g-recaptcha-response' => 'required|captcha'
+        // ]);
+
         if (Auth::attempt($request->only($loginType, 'password'))) {
             if (Auth::user()->isAdmin()) {
                 $otp = random_int(100000, 999999);
@@ -119,18 +120,15 @@ class AuthController extends Controller
             } else {
                 $is_verified = Auth::user()->is_verified;
                 if (!$is_verified) {
-                    $apiResponse = $this->cryptoAPI->make_api_call('send_otp', [
-                        "Type" => "1",
-                        "Email" => Auth::user()->email
-                    ]);
-                    $logData = [
-                        'request' => [
-                            "Type" => "1",
-                            "Email" => Auth::user()->email
-                        ],
-                        'response' => $apiResponse
-                    ];
-                    \Log::info('cryptoResponse:resend_login_otp[' . Auth::user()->email . ']' . json_encode($logData));
+
+                    $otp = random_int(100000, 999999);
+                    Auth::user()->login_otp = $otp;
+                    Auth::user()->otp_sent_at = time();
+                    Auth::user()->save();
+                    Mail::send('templates.emails.userLoginOTP', ['token' => $otp], function ($message) use ($request) {
+                        $message->to(Auth::user()->email);
+                        $message->subject('User Login OTP');
+                    });
                 } else {
                     $narration = Auth::user()->username . " user login";
                     add_user_logs(Auth::user()->id, 'login', $narration);
@@ -170,8 +168,6 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-
-
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',

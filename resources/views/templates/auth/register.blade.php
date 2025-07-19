@@ -118,12 +118,12 @@
 								@endif
 							</div>
 						</div>
-						<div class="col-md-12">
+						<!-- <div class="col-md-12">
 							<div class="form-group">
 								<label for="capatcha">Captcha</label>
 								<div class="captcha">
 									<span>{!! app('captcha')->display() !!}</span>
-									<!-- <button type="button" class="btn btn-success refresh-cpatcha"><i class="fa fa-refresh"></i></button> -->
+									<button type="button" class="btn btn-success refresh-cpatcha"><i class="fa fa-refresh"></i></button>
 								</div>
 
 								@error('g-recaptcha-response')
@@ -131,7 +131,8 @@
 								@enderror
 							</div>
 
-						</div>
+						</div> -->
+
 						<div class="col-md-12">
 							<div class="form-group">
 								<div class="custom-control custom-control-xs custom-checkbox">

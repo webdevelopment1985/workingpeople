@@ -18,7 +18,7 @@
                         <h5 class="nk-block-title">Sign-In</h5>
                         <div class="nk-block-des">
                             <p>Fill the details below to Access the
-                                <?=config('app.name', 'Sri Swap')?>
+                                <?= config('app.name', 'Sri Swap') ?>
                                 Account.
                             </p>
                         </div>
@@ -66,18 +66,18 @@
                                 class="form-control form-control-lg" placeholder="Enter your password">
                         </div>
                     </div><!-- .form-group -->
-                    
-						<div class="form-group">
-                <label for="capatcha">Captcha</label>
-                <div class="captcha">
-                  <span>{!! app('captcha')->display() !!}</span>
-                  <!-- <button type="button" class="btn btn-success refresh-cpatcha"><i class="fa fa-refresh"></i></button> -->
-                </div>
-               
-                @error('g-recaptcha-response')
-                <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-              </div>
+
+                    <!-- <div class="form-group">
+                        <label for="capatcha">Captcha</label>
+                        <div class="captcha">
+                            <span>{!! app('captcha')->display() !!}</span>
+                            <button type="button" class="btn btn-success refresh-cpatcha"><i class="fa fa-refresh"></i></button>
+                        </div>
+
+                        @error('g-recaptcha-response')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div> -->
 
                     <div class="form-group">
                         <button type="submit" class="btn btn-lg btn-primary btn-block">Sign in</button>
@@ -114,7 +114,7 @@
                                 <!-- <img class="round" src="http://localhost/new_apps/assets/images/slides/promo-a.png" srcset="http://localhost/new_apps/assets/images/slides/promo-a2x.png 2x" alt=""> -->
                             </div>
                             <div class="nk-feature-content py-4 p-sm-5">
-                                <h4><?=config('app.name', 'Sri Swap')?>
+                                <h4><?= config('app.name', 'Sri Swap') ?>
                                 </h4>
                                 <p></p>
                             </div>
