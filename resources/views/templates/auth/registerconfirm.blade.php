@@ -91,7 +91,7 @@
                             <div class="nk-feature-img">
                             </div>
                             <div class="nk-feature-content py-4 p-sm-5">
-                                <h4><?=config('app.name', 'FinTradePool')?>
+                                <h4><?= config('app.name', 'WorkingPeoples') ?>
                                 </h4>
                                 <p></p>
                             </div>
@@ -103,56 +103,56 @@
     </div><!-- nk-split -->
 </div>
 <script>
-function resendOTP() {
-    $.ajax({
-        url: "<?=route('resend.confirm.otp')?>",
-        method: 'POST',
-        success: function(ajaxResp) {
-            if (ajaxResp.success) {
-                timer();
-                $('#btnResendOTP').hide();
-                $('#message_success').text(ajaxResp.message);
-                setTimeout(() => {
-                    $('#message_success').text('');
-                }, 10000);
+    function resendOTP() {
+        $.ajax({
+            url: "<?= route('resend.confirm.otp') ?>",
+            method: 'POST',
+            success: function(ajaxResp) {
+                if (ajaxResp.success) {
+                    timer();
+                    $('#btnResendOTP').hide();
+                    $('#message_success').text(ajaxResp.message);
+                    setTimeout(() => {
+                        $('#message_success').text('');
+                    }, 10000);
+                } else {
+                    $('#message_error').text(ajaxResp.message);
+                    setTimeout(() => {
+                        $('#message_error').text('');
+                    }, 5000);
+                }
+            },
+            error: function(error) {}
+        });
+    }
+
+    function timer() {
+        var seconds = 5;
+        var minutes = 1;
+
+        var timer = setInterval(() => {
+
+            if (minutes < 0) {
+                $('.time').text('');
+                $('#btnResendOTP').show();
+                clearInterval(timer);
             } else {
-                $('#message_error').text(ajaxResp.message);
-                setTimeout(() => {
-                    $('#message_error').text('');
-                }, 5000);
+                let tempMinutes = minutes.toString().length > 1 ? minutes : '0' + minutes;
+                let tempSeconds = seconds.toString().length > 1 ? seconds : '0' + seconds;
+
+                $('.time').text(tempMinutes + ':' + tempSeconds);
             }
-        },
-        error: function(error) {}
-    });
-}
 
-function timer() {
-    var seconds = 5;
-    var minutes = 1;
+            if (seconds <= 0) {
+                minutes--;
+                seconds = 59;
+            }
 
-    var timer = setInterval(() => {
+            seconds--;
 
-        if (minutes < 0) {
-            $('.time').text('');
-            $('#btnResendOTP').show();
-            clearInterval(timer);
-        } else {
-            let tempMinutes = minutes.toString().length > 1 ? minutes : '0' + minutes;
-            let tempSeconds = seconds.toString().length > 1 ? seconds : '0' + seconds;
+        }, 1000);
+    }
 
-            $('.time').text(tempMinutes + ':' + tempSeconds);
-        }
-
-        if (seconds <= 0) {
-            minutes--;
-            seconds = 59;
-        }
-
-        seconds--;
-
-    }, 1000);
-}
-
-timer();
+    timer();
 </script>
 @endsection

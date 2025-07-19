@@ -82,7 +82,7 @@
                             <div class="nk-feature-img">
                             </div>
                             <div class="nk-feature-content py-4 p-sm-5">
-                                <h4><?=config('app.name', 'FinTradePool')?>
+                                <h4><?= config('app.name', 'WorkingPeoples') ?>
                                 </h4>
                                 <p></p>
                             </div>
@@ -96,7 +96,7 @@
 <script>
     function resendOTP() {
         $.ajax({
-            url: "<?=route('resend.admin.login.otp')?>",
+            url: "<?= route('resend.admin.login.otp') ?>",
             method: 'POST',
             success: function(ajaxResp) {
                 if (ajaxResp.success) {

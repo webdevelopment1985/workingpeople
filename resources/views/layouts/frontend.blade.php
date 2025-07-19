@@ -17,10 +17,10 @@
     <!-- Page Title  -->
     <title>
         @yield('title') |
-        <?=config('app.name', 'FinTradePool')?>
+        <?= config('app.name', 'WorkingPeoples') ?>
     </title>
-    <!-- StyleSheets  -->  
-   
+    <!-- StyleSheets  -->
+
 
 
 
@@ -75,7 +75,7 @@
     <!-- app-root @e -->
     <!-- JavaScript -->
     <!-- JavaScript -->
-   
+
 
     <script src="{{ url('/assets/js/bundle.js?ver=2.9.1') }}"></script>
     <script src="{{ url('/assets/js/scripts.js?ver=2.9.1') }}"></script>

@@ -4,7 +4,7 @@
 <head>
     <base href="../">
     <meta charset="utf-8">
-    <meta name="author" content="FinTradePool">
+    <meta name="author" content="workingpeoples">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <!-- Fav Icon  -->
@@ -12,7 +12,7 @@
     <!-- Page Title  -->
     <title>
         @yield('title') |
-        <?=config('app.name', 'FinTradePool')?>
+        <?= config('app.name', 'workingpeoples') ?>
     </title>
 
     <!-- StyleSheets  -->
@@ -32,13 +32,13 @@
     @yield('include_stylesheet')
 
     <script>
-    function copytext(id) {
-        var clipboard = new Clipboard('#' + id);
-        clipboard.on('success', function(e) {
-            e.clearSelection();
-            $('#' + id).text('Copied');
-        });
-    }
+        function copytext(id) {
+            var clipboard = new Clipboard('#' + id);
+            clipboard.on('success', function(e) {
+                e.clearSelection();
+                $('#' + id).text('Copied');
+            });
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.0/clipboard.min.js"></script>
@@ -83,37 +83,39 @@
     <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
 
     <script>
-    function disabledBtn() {
-        iziToast.error({
-            message: 'Temporarily Disabled Kindly Try After Sometime!!!',
-            position: 'topRight'
-        });
-    }
+        function disabledBtn() {
+            iziToast.error({
+                message: 'Temporarily Disabled Kindly Try After Sometime!!!',
+                position: 'topRight'
+            });
+        }
     </script>
 
-@if(session('success'))
-<script>
-    iziToast.success({
-        message: '{{ session('success') }}',
-        position: 'topRight'
-    });
-</script>
-@endif
+    @if(session('success'))
+    <script>
+        iziToast.success({
+            message: '{{ session('
+            success ') }}',
+            position: 'topRight'
+        });
+    </script>
+    @endif
 
-@if(session('error'))
-<script>
-    iziToast.error({
-        message: '{{ session('error') }}',
-        position: 'topRight'
-    });
-</script>
-@endif
+    @if(session('error'))
+    <script>
+        iziToast.error({
+            message: '{{ session('
+            error ') }}',
+            position: 'topRight'
+        });
+    </script>
+    @endif
 
     <style>
-    .disabledBtn {
-        color: red;
-        font-size: 11px;
-    }
+        .disabledBtn {
+            color: red;
+            font-size: 11px;
+        }
     </style>
 </body>
 
