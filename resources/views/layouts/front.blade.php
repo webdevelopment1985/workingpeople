@@ -103,8 +103,7 @@
                     submitButton.text('Submitting...').prop('disabled', true);
                     // If the user confirms, send the email
                     $.ajax({
-                        url: '{{ route('
-                        send.email ') }}', // Use the correct route URL for your email sending
+                        url: '{{ route("send.email") }}', // Use the correct route URL for your email sending
                         type: 'POST',
                         data: formData,
                         success: function(response) {
