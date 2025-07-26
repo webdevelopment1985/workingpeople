@@ -61,11 +61,11 @@ class AuthController extends Controller
             Mail::send('templates.emails.sendemail', [
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'userMessage' => $data['message'] // Rename the variable
+                'userMessage' => $data['message']
 
             ], function ($message) use ($data) {
-                $message->to(env('MAIL_FROM_ADDRESS')); // Send to the admin email
-                $message->from($data['email'], $data['name']); // From the user's email and name
+                $message->to(env('MAIL_FROM_ADDRESS'));
+                $message->from($data['email'], $data['name']);
                 $message->subject('User Query');
             });
 
@@ -155,7 +155,7 @@ class AuthController extends Controller
                 return redirect()->route('register');
             }
         } else {
-            $defaultSponsor = User::where('sponsor', 0)->first();
+            $defaultSponsor = User::where('sponsor', 0)->where('users_type', 1)->first();
             if ($defaultSponsor) {
                 $sponsor = $defaultSponsor->username;
             } else {

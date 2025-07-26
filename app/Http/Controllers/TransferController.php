@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Validation\Rule;
 use App\Models\User;
 use App\Models\Transaction;
@@ -19,7 +20,7 @@ use App\Helper\CryptoAPI;
 
 class TransferController extends Controller
 {
-    
+
     private $crypto;
 
     public function __construct()
@@ -30,9 +31,7 @@ class TransferController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-    }
+    public function index() {}
 
 
     public function internalTransfer(Request $request)
@@ -40,20 +39,20 @@ class TransferController extends Controller
         $dataForView = array();
         $user = Auth::user();
         $currency = 'usdt';
-        $userId = $user->id;        
+        $userId = $user->id;
 
         $dataForView['title'] = 'Internal Transfer';
 
         $wallet_amount = $user->getBalance('usdt');
         $dataForView['wallet_amount'] = $wallet_amount;
-        
+
         $min_Transfer_Amount = get_settings('min_internal_transfer');
         $dataForView['min_internal_transfer'] = $min_Transfer_Amount;
 
         if ($request->ajax()) {
 
             $validator = Validator::make($request->all(), [
-                'email' => ['required', 'email', Rule::exists('users', 'email')->where('users_type',1)->where('is_verified',1)],
+                'email' => ['required', 'email', Rule::exists('users', 'email')->where('users_type', 1)->where('is_verified', 1)],
                 'amount' => ['required', 'numeric', 'min:' . $min_Transfer_Amount],
                 'type' => 'required|in:1,2',
             ], [
@@ -66,7 +65,7 @@ class TransferController extends Controller
                 'type.required' => 'Invalid transfer request.',
                 'type.in' => 'The type must be either 1 or 2.',
             ]);
-            
+
             $validator->sometimes('otp', 'required', fn($input) => $input->type == 2);
             $validator->sometimes('request_id', 'required', fn($input) => $input->type == 2);
 
@@ -86,15 +85,14 @@ class TransferController extends Controller
 
             $to_user = User::where('email', $email)->first();
             if ($request->type == 1) {
-                if(!$to_user->is_verified){
+                if (!$to_user->is_verified) {
                     return $this->sendresponse(false, 'User has not verified his account.');
                 }
                 $myDownlineUsers = $this->getDownlineUsers($userId);
-                if(!in_array($to_user->id, $myDownlineUsers)){
+                if (!in_array($to_user->id, $myDownlineUsers)) {
                     return $this->sendresponse(false, 'You can transfer only to your downline user.');
                 }
                 return $this->handleInitialTransferRequest($to_user, $amount, $email, $request);
-
             } elseif ($request->type == 2) {
                 return $this->handleConfirmTransferRequest($to_user, $amount, $email, $otp, $request->request_id, $request);
             } else {
@@ -110,7 +108,7 @@ class TransferController extends Controller
         $confirm_key = uniqid() . Str::random(10);
 
         $internalTransfer = new InternalTransfer();
-        $internalTransfer->transactionId = 'TX-'. Str::random(5) . uniqid() . Str::random(5);
+        $internalTransfer->transactionId = 'TX-' . Str::random(5) . uniqid() . Str::random(5);
         $internalTransfer->from_user = Auth::user()->id;
         $internalTransfer->to_user = $to_user->id;
         $internalTransfer->amount = $amount;
@@ -120,12 +118,12 @@ class TransferController extends Controller
         $internalTransfer->otp = $otp;
         $internalTransfer->otp_expire_time =  date('Y-m-d H:i:s', strtotime(Carbon::now()->addMinutes(3)));
         $internalTransfer->created_at = date('Y-m-d H:i:s', strtotime(Carbon::now()));
-       
+
         if ($internalTransfer->save()) {
             Mail::send('templates.emails.transferconfirmation', [
-                'username'=>Auth::user()->username,
+                'username' => Auth::user()->username,
                 'otp' => $otp,
-                'amount' =>$amount,
+                'amount' => $amount,
                 'currency' => 'USDT',
                 'otp_valid_mins' => 3,
             ], function ($message) use ($request) {
@@ -134,11 +132,11 @@ class TransferController extends Controller
             });
             add_user_logs(Auth::user()->id, 'internal-transfer', Auth::user()->username . ' has initiated internal transfer of amount : ' . $amount);
             $logData = [
-                'request'=>$request,
-                'from_user'=>Auth::user()->username,
-                'to_user'=>$to_user->username
+                'request' => $request,
+                'from_user' => Auth::user()->username,
+                'to_user' => $to_user->username
             ];
-            \Log::info('internalTransfer:init['.Auth::user()->email.']' . json_encode($logData));
+            \Log::info('internalTransfer:init[' . Auth::user()->email . ']' . json_encode($logData));
             return $this->sendresponse(true, 'OTP sent successfully.', $confirm_key);
         }
         return $this->sendresponse(false, 'Failed to create transfer request.');
@@ -175,7 +173,7 @@ class TransferController extends Controller
             (new Transaction())->updateUserBalance(Auth::user()->id, $amount, 0, 'USDT', 'USDT sent', 'debit', 'internal-transfer', 1, $pendingTransfer->id, null);
         });
 
-       
+
         Mail::send('templates.emails.transferconfirmed', [
             'username' => $to_user->username,
             'amount' => $amount,
@@ -190,11 +188,11 @@ class TransferController extends Controller
 
         add_user_logs(Auth::user()->id, 'internal-transfer', Auth::user()->username . ' has confirmed transfer of amount : ' . $amount);
         $logData = [
-            'request'=>$request,
-            'from_user'=>Auth::user()->username,
-            'to_user'=>$to_user->username
+            'request' => $request,
+            'from_user' => Auth::user()->username,
+            'to_user' => $to_user->username
         ];
-        \Log::info('internalTransfer:confirm['.Auth::user()->email.']' . json_encode($logData));
+        \Log::info('internalTransfer:confirm[' . Auth::user()->email . ']' . json_encode($logData));
         return $this->sendresponse(true, 'Transfer confirmed successfully', ['wallet_amount' => $authUser->wallet_amount]);
     }
 
@@ -202,105 +200,99 @@ class TransferController extends Controller
     public function internalTransferHistory(Request $request)
     {
         $columns = array(
-            0 =>'created_at',
-            1=> 'created_at',
-            2=> 'transactionId',
-            3=> 'from_user',
-            4=> 'amount',
-            5=> 'created_at',
-            6=> 'status'
+            0 => 'created_at',
+            1 => 'created_at',
+            2 => 'transactionId',
+            3 => 'from_user',
+            4 => 'amount',
+            5 => 'created_at',
+            6 => 'status'
         );
- 
+
         $user = auth()->user();
         $fromUserId = $toUserId = $user->id;
 
         $limit = $request->input('length');
         $start = $request->input('start');
-        
+
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
- 
-        if(!empty($request->input('search.value'))) {            
-            $transactionsQuery = InternalTransfer::where(function($query) use ($fromUserId, $toUserId) {
+
+        if (!empty($request->input('search.value'))) {
+            $transactionsQuery = InternalTransfer::where(function ($query) use ($fromUserId, $toUserId) {
                 $query->where('from_user', $fromUserId)
-                      ->orWhere('to_user', $toUserId);
+                    ->orWhere('to_user', $toUserId);
             })
-            ->when(request()->input('search.value'), function ($query) {
-                $query->whereHas('fromUser', function($q) {
-                    $q->where('username', 'like', '%' . request()->input('search.value') . '%');
+                ->when(request()->input('search.value'), function ($query) {
+                    $query->whereHas('fromUser', function ($q) {
+                        $q->where('username', 'like', '%' . request()->input('search.value') . '%');
+                    })
+                        ->orWhereHas('toUser', function ($q) {
+                            $q->where('username', 'like', '%' . request()->input('search.value') . '%');
+                        });
                 })
-                ->orWhereHas('toUser', function($q) {
-                    $q->where('username', 'like', '%' . request()->input('search.value') . '%');
-                });
-            })
-            ->where('status', 1)
-            ->with(['fromUser', 'toUser'])
-            ->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir);
+                ->where('status', 1)
+                ->with(['fromUser', 'toUser'])
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir);
 
             $transactions = $transactionsQuery->get();
             $totalFiltered = $totalData = $transactionsQuery->count();
-
         } else {
 
-            $transactionsQuery = InternalTransfer::where(function($query) use ($fromUserId, $toUserId) {
+            $transactionsQuery = InternalTransfer::where(function ($query) use ($fromUserId, $toUserId) {
                 $query->where('from_user', $fromUserId)
-                      ->orWhere('to_user', $toUserId);
+                    ->orWhere('to_user', $toUserId);
             })
-            ->where('status', 1)
-            ->with(['fromUser', 'toUser'])
-            ->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir);
+                ->where('status', 1)
+                ->with(['fromUser', 'toUser'])
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir);
 
             $transactions = $transactionsQuery->get();
             $totalFiltered = $totalData = $transactionsQuery->count();
-
         }
         $data = array();
         $srNo = 1;
 
-        if(!empty($transactions)) {
+        if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
-                
+
                 $is_Sender = $transaction->fromUser->id == $user->id ? 1 : 0;
                 $nestedData = array();
                 $nestedData[] = $srNo++;
                 $nestedData[] = date('Y-m-d H:i:s', strtotime($transaction->created_at));
                 $nestedData[] = $transaction->transactionId;
-                if($is_Sender){
+                if ($is_Sender) {
                     $nestedData[] = $transaction->toUser->username;
-                }
-                else{
+                } else {
                     $nestedData[] = $transaction->fromUser->username;
                 }
-                $nestedData[] = truncate_number($transaction->amount,4);
+                $nestedData[] = truncate_number($transaction->amount, 4);
                 $nestedData[] = $is_Sender ? 'Sent' : 'Received';
 
-                if($transaction->status == 1){
+                if ($transaction->status == 1) {
                     $nestedData[] = 'Completed';
-                }
-                else if($transaction->status == 2){
+                } else if ($transaction->status == 2) {
                     $nestedData[] = 'Rejected';
-                }
-                else if($transaction->status == 3){
+                } else if ($transaction->status == 3) {
                     $nestedData[] = 'Cancelled';
-                }
-                else{
+                } else {
                     $nestedData[] = 'Pending';
                 }
                 $data[] = $nestedData;
             }
         }
- 
+
         $json_data = array(
-        "draw"            => intval($request->input('draw')),
-        "recordsTotal"    => intval($totalData),
-        "recordsFiltered" => intval($totalFiltered),
-        "data"            => $data
+            "draw"            => intval($request->input('draw')),
+            "recordsTotal"    => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data"            => $data
         );
- 
+
         return response()->json($json_data);
     }
 
@@ -311,7 +303,7 @@ class TransferController extends Controller
     {
         $dataForView = array();
         $user = Auth::user();
-        $userId = $user->id;        
+        $userId = $user->id;
 
         $dataForView['title'] = 'Wallet Transfer';
 
@@ -319,7 +311,7 @@ class TransferController extends Controller
         $withdrawal_amount = $user->getWithdrawBalance();
         $dataForView['wallet_amount'] = $wallet_amount;
         $dataForView['withdrawal_amount'] = $withdrawal_amount;
-        
+
 
         if ($request->ajax()) {
             $min_Transfer_Amount = 1;
@@ -331,7 +323,7 @@ class TransferController extends Controller
                 'amount.numeric' => 'Amount must be a valid number.',
                 'amount.min' => 'The amount must be at least ' . $min_Transfer_Amount . '.',
             ]);
-            
+
             $validator->sometimes('otp', 'required', fn($input) => $input->type == 2);
             // $validator->sometimes('request_id', 'required', fn($input) => $input->type == 2);
 
@@ -344,10 +336,8 @@ class TransferController extends Controller
             $amount = $request->amount;
 
             if ($amount < $min_Transfer_Amount) {
-                //return $this->sendresponse(false, 'Please enter minimum transfer amount.');
                 return response()->json(['status' => "error", 'msg' => 'Please enter minimum transfer amount.']);
             } elseif ($amount > $wallet_amount) {
-                //return $this->sendresponse(false, 'You have insufficient balance for transfer request.');
                 return response()->json(['status' => "error", 'msg' => 'You have insufficient balance for transfer request.']);
             }
             $symbol = 'USDT';
@@ -358,7 +348,6 @@ class TransferController extends Controller
                 return $this->verifyOtp($email, $authCode, $symbol, $amount);
             } else {
                 return response()->json(['status' => "error", 'msg' => 'Invalid Transfer Request.']);
-            
             }
         }
         return view('templates.user.walletTransfer', $dataForView);
@@ -423,7 +412,7 @@ class TransferController extends Controller
                 'status' => 1,
                 'txn_hash' => $apiResponse->uniqueTransactionId
             ]);
-           
+
             Transaction::where(['txid' => "$apiResponse->referenceNo", 'type' => 'wallet-transfer', 'user_id' => $accountId])->update(['status' => 1]);
 
             add_user_logs($accountId, "wallet-transfer", "wallet_transfer verified of amount {$amountW} {$symbol}");
@@ -434,13 +423,13 @@ class TransferController extends Controller
                 'status' => 'success',
                 'msg' => 'Wallet Transfer Successfully',
                 'data' => $apiResponse,
-                'wallet_amount'=>$wallet_amount,
-                'withdraw_amount'=>$withdrawal_amount
+                'wallet_amount' => $wallet_amount,
+                'withdraw_amount' => $withdrawal_amount
             ]);
         }
 
         add_user_logs($accountId, "wallet-transfer", "wallet_transfer crypto failed " . json_encode($apiResponse));
-        
+
         return response()->json([
             'status' => 'error',
             'msg' => $apiResponse->details ?? 'Server did not respond. Please try again later.',
@@ -448,93 +437,91 @@ class TransferController extends Controller
         ]);
     }
 
-    public function walletTransferHistory(Request $request){
+    public function walletTransferHistory(Request $request)
+    {
         $columns = array(
-            0 =>'id',
-            1 =>'created_at',
-            2=> 'txid',
-            3=> 'narration',
-            4=> 'amount',
-            5=> 'txn_hash',
-            6=> 'status'        
+            0 => 'id',
+            1 => 'created_at',
+            2 => 'txid',
+            3 => 'narration',
+            4 => 'amount',
+            5 => 'txn_hash',
+            6 => 'status'
         );
- 
+
         $user = auth()->user();
 
         $limit = $request->input('length');
         $start = $request->input('start');
-        
+
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
- 
-        if(!empty($request->input('search.value'))) {            
-            $transactionsQuery = WalletTransfer::where(function($query) use ($txid, $user) {
+
+        if (!empty($request->input('search.value'))) {
+            $transactionsQuery = WalletTransfer::where(function ($query) use ($txid, $user) {
                 $query->where('user_id', $user->id);
             })
-            ->when(request()->input('search.value'), function ($query) {
-                $query->where('txn_hash', 'like', '%' . request()->input('search.value') . '%')
-                ->orWhere('txid', 'like', '%' . request()->input('search.value') . '%');
-            })
-            ->where('status', 1)
-            ->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir);
+                ->when(request()->input('search.value'), function ($query) {
+                    $query->where('txn_hash', 'like', '%' . request()->input('search.value') . '%')
+                        ->orWhere('txid', 'like', '%' . request()->input('search.value') . '%');
+                })
+                ->where('status', 1)
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir);
 
             $transactions = $transactionsQuery->get();
             $totalFiltered = $totalData = $transactionsQuery->count();
-
         } else {
 
-            $transactionsQuery = WalletTransfer::where(function($query) use ($user) {
+            $transactionsQuery = WalletTransfer::where(function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
-            ->where('status', 1)
-            ->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir);
+                ->where('status', 1)
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir);
 
             $transactions = $transactionsQuery->get();
             $totalFiltered = $totalData = $transactionsQuery->count();
-
         }
         $data = array();
         $srNo = 1;
         $columns = array(
-            0 =>'id',
-            0 =>'created_at',
-            1=> 'txid',
-            2=> 'narration',
-            3=> 'amount',
-            4=> 'txn_hash',
-            5=> 'status'        
+            0 => 'id',
+            0 => 'created_at',
+            1 => 'txid',
+            2 => 'narration',
+            3 => 'amount',
+            4 => 'txn_hash',
+            5 => 'status'
         );
-        if(!empty($transactions)) {
+        if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
                 $nestedData = array();
                 $nestedData[] = $srNo++;
                 $nestedData[] = date('Y-m-d H:i:s', strtotime($transaction->created_at));
                 $nestedData[] = $transaction->txid;
                 $nestedData[] = $transaction->naration;
-                $nestedData[] = truncate_number($transaction->amount,4);
+                $nestedData[] = truncate_number($transaction->amount, 4);
                 $nestedData[] = $transaction->txn_hash;
 
-                if($transaction->status == 1){
+                if ($transaction->status == 1) {
                     $nestedData[] = 'Completed';
-                }else{
+                } else {
                     $nestedData[] = 'Pending';
                 }
                 $data[] = $nestedData;
             }
         }
- 
+
         $json_data = array(
-        "draw"            => intval($request->input('draw')),
-        "recordsTotal"    => intval($totalData),
-        "recordsFiltered" => intval($totalFiltered),
-        "data"            => $data
+            "draw"            => intval($request->input('draw')),
+            "recordsTotal"    => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data"            => $data
         );
- 
+
         return response()->json($json_data);
     }
-
 }

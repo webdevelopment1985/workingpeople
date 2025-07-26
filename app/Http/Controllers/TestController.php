@@ -36,7 +36,7 @@ class TestController extends Controller
         $userId = $user->id;
 
         $referral_link = $user->referralLink();
-        $wallet_amount = $user->getBalance($currency);
+        $deposit_wallet = $user->getBalance($currency);
         $incomeBalance = $user->getBalance('withdrawable_amount');
         $package_min_price = get_settings('package_min_amount');
 
@@ -46,7 +46,7 @@ class TestController extends Controller
         $total_level_income = $user->totalIncome('level-income');
 
         $dataForView = [
-            'usdBalance' => truncate_number($wallet_amount, 4),
+            'usdBalance' => truncate_number($deposit_wallet, 4),
             'incomeBalance' => truncate_number($incomeBalance, 4),
             'package_min_price' => $package_min_price,
             'total_deposit_usdt' => truncate_number($total_deposit_usdt, 4),
@@ -55,7 +55,7 @@ class TestController extends Controller
             'total_level_income' => truncate_number($total_level_income, 4),
             'referral_link' => $referral_link
         ];
-        
+
         return view('templates.home.dashboard', $dataForView);
     }
 
@@ -83,8 +83,4 @@ class TestController extends Controller
         print_r($responseAccnt);
         die;
     }
-
-
-
-
 }
