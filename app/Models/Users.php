@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Auth;
 
 class Users extends Authenticatable
 {
@@ -45,9 +46,17 @@ class Users extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [];
-    
+
+    // public function isAdmin()
+    // {
+    //     return $this->is_admin;
+    // }
+
     public function isAdmin()
     {
-        return $this->is_admin;
+        if (Auth::user()->users_type == 2) {
+            return true;
+        }
+        return false;
     }
 }

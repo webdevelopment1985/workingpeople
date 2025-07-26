@@ -5,16 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Auth as AuthFacade;
 use App\Models\User;
-use App\Models\Deposit;
-use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Helper\CryptoAPI;
-use DB;
-use Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
@@ -89,9 +86,9 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        if (\Auth::check() && Auth::user()->isAdmin()) {
+        if (Auth::check() && Auth::user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
-        } elseif (\Auth::check() && !Auth::user()->isAdmin()) {
+        } elseif (Auth::check() && !Auth::user()->isAdmin()) {
             return redirect()->route('dashboard');
         }
 
@@ -109,9 +106,10 @@ class AuthController extends Controller
         if (Auth::attempt($request->only($loginType, 'password'))) {
             if (Auth::user()->isAdmin()) {
                 $otp = random_int(100000, 999999);
-                Auth::user()->login_otp = $otp;
-                Auth::user()->otp_sent_at = time();
-                Auth::user()->save();
+                $userModel = User::find(Auth::id());
+                $userModel->login_otp = $otp;
+                $userModel->otp_sent_at = time();
+                $userModel->save();
                 Mail::send('templates.emails.adminLoginOTP', ['token' => $otp], function ($message) use ($request) {
                     $message->to(Auth::user()->email);
                     $message->subject('Admin Login OTP');
@@ -123,8 +121,9 @@ class AuthController extends Controller
 
                     $otp = random_int(100000, 999999);
                     Auth::user()->login_otp = $otp;
-                    Auth::user()->otp_sent_at = time();
-                    Auth::user()->save();
+                    $user = User::find(Auth::id());
+                    $user->otp_sent_at = time();
+                    $user->save();
                     Mail::send('templates.emails.userLoginOTP', ['token' => $otp], function ($message) use ($request) {
                         $message->to(Auth::user()->email);
                         $message->subject('User Login OTP');
@@ -143,7 +142,7 @@ class AuthController extends Controller
 
     public function showRegisterForm(Request $request)
     {
-        if (\Auth::check()) {
+        if (Auth::check()) {
             return redirect()->route('dashboard');
         }
         $dataForView = array();
@@ -174,7 +173,7 @@ class AuthController extends Controller
             'username' => 'required|string|alpha_num|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'checkbox' => 'required',
-            'g-recaptcha-response' => 'required|captcha'
+            // 'g-recaptcha-response' => 'required|captcha'
         ], [
             'name.required' => 'Please enter your full name',
             'email.required' => 'Please enter email address',
@@ -185,9 +184,11 @@ class AuthController extends Controller
             'checkbox' => 'Please Select Privacy Policy & Terms.'
         ]);
         $sponsor_id = 1;
+
         if ($request->input('sponsor')) {
+
             $sponsor = strtolower($request->input('sponsor'));
-            $sponsorExist = User::where('username', $sponsor)->where('is_paid', 1)->first();
+            $sponsorExist = User::where('username', $sponsor)->first();
             if ($sponsorExist) {
                 $sponsor_id = $sponsorExist->id;
             } else {
@@ -206,28 +207,18 @@ class AuthController extends Controller
         ]);
         if ($user->id) {
             try {
-                $apiResponse = $this->cryptoAPI->make_api_call('send_otp', [
-                    "Type" => "1",
-                    "Email" => $validatedData['email']
-                ]);
-                $logData = [
-                    'request' => [
-                        "Type" => "1",
-                        "Email" => $validatedData['email']
-                    ],
-                    'response' => $apiResponse
-                ];
-                \Log::info('cryptoResponse:send_otp[' . $validatedData['email'] . ']' . json_encode($logData));
-
-                if ($apiResponse->message == 'success' && isset($apiResponse->details)) {
-                    if (Auth::attempt(["email" => $validatedData['email'], "password" => $validatedData['password']])) {
-                        Auth::user()->otp_sent_at = time();
-                        Auth::user()->save();
-                        Session::flash('success', 'Please enter otp sent on your email address');
-                        return redirect()->route('register-confirm');
-                    }
-                } else {
-                    Log::info('register API failed Response for {User}', ['User' => $validatedData['email'], 'apiResponse' => $apiResponse]);
+                if (Auth::attempt(["email" => $validatedData['email'], "password" => $validatedData['password']])) {
+                    $userModel = User::find(Auth::id());
+                    $otp = random_int(100000, 999999);
+                    $userModel->login_otp = $otp;
+                    $userModel->otp_sent_at = time();
+                    $userModel->save();
+                    Mail::send('templates.emails.accountverify', ['token' => $otp], function ($message) use ($request) {
+                        $message->to(Auth::user()->email);
+                        $message->subject('Account Verification OTP');
+                    });
+                    Session::flash('success', 'Please enter otp sent on your email address');
+                    return redirect()->route('register-confirm');
                 }
             } catch (Exception $e) {
                 Log::error('register[send_otp] API Exception : ', ['message' => $e->getMessage()]);
@@ -324,7 +315,7 @@ class AuthController extends Controller
     public function showRegisterFormConfirm()
     {
         $dataForView = array();
-        if (\Auth::check()) {
+        if (Auth::check()) {
             $dataForView['email'] = Auth::user()->email;
             return view('templates.auth.registerconfirm', $dataForView);
         } else {
@@ -334,7 +325,7 @@ class AuthController extends Controller
 
     public function postRegisterFormConfirm(Request $request)
     {
-        if (\Auth::check()) {
+        if (Auth::check()) {
             $validatedData = $request->validate([
                 'confirm_otp' => 'required|max:6'
             ], [
@@ -343,40 +334,22 @@ class AuthController extends Controller
             $confirm_otp = $request->confirm_otp;
             $user = Auth::user();
             try {
-                $apiResponse = $this->cryptoAPI->make_api_call('verify_otp', [
-                    "Type" => "1",
-                    "VerifyCode" => $confirm_otp,
-                    "UserID" => Auth::user()->username,
-                    "Email" => $user->email
-                ]);
-
-                $logData = [
-                    'request' => [
-                        "Type" => "1",
-                        "VerifyCode" => $confirm_otp,
-                        "UserID" => Auth::user()->username,
-                        "Email" => $user->email
-                    ],
-                    'response' => $apiResponse
-                ];
-                \Log::info('cryptoResponse:verify_otp[' . $user->email . ']' . json_encode($logData));
-
-                if ($apiResponse->message == 'success') {
-                    Auth::user()->is_verified = 1;
-                    Auth::user()->status = 1;
-                    Auth::user()->otp_sent_at = null;
-                    Auth::user()->save();
-                    $param = $user->id;
-
-                    DB::select('CALL addLevelRecord(?)', [$param]);
-
-                    return redirect()->route('dashboard');
-                } elseif ($apiResponse->message == 'failed' && isset($apiResponse->details)) {
-                    Log::info('postRegisterFormConfirm[verify_otp] API Exception : ', ['apiResponse' => $apiResponse]);
-                    return redirect()->back()->withErrors(['confirm_otp' => $apiResponse->details]);
-                } else {
-                    Log::info('postRegisterFormConfirm[verify_otp] API Exception : ', ['apiResponse' => $apiResponse]);
-                    return redirect()->back()->withErrors(['confirm_otp' => 'Invalid OTP']);
+                $userModel = User::find(Auth::id());
+                if ($userModel->login_otp > 0) {
+                    $otp_sent_at = $userModel->otp_sent_at;
+                    $currentTime = time();
+                    if ($currentTime > ($otp_sent_at + 300)) { // 5 minutes
+                        return redirect()->back()->withErrors(['confirm_otp' => 'OTP has been expired. Please try again.']);
+                    } elseif ($userModel->login_otp == $confirm_otp) {
+                        $userModel->login_otp = null;
+                        $userModel->otp_sent_at = null;
+                        $userModel->save();
+                        DB::select('CALL addLevelRecord(?)', [$userModel->id]);
+                        add_user_logs($userModel->id, 'login', "User " . $userModel->username . " has verified his account successfully");
+                        return redirect()->route('dashboard');
+                    } else {
+                        return redirect()->back()->withErrors(['confirm_otp' => 'Please enter valid OTP']);
+                    }
                 }
             } catch (Exception $e) {
                 Log::error('postRegisterFormConfirm[verify_otp] API Exception : ', ['message' => $e->getMessage()]);
@@ -389,39 +362,26 @@ class AuthController extends Controller
 
     public function resendConfirmOTP(Request $request)
     {
-        if (\Auth::check()) {
+        if (Auth::check()) {
             $user = User::where('email', Auth::user()->email)->first();
             $currentTime = time();
             $time = $user->otp_sent_at;
-
             if ($currentTime >= $time && $time >= $currentTime - (60 + 5)) {
-                return response()->json(['success' => false, 'message' => 'Please wait for 60 seconds before sending new OTP']);
+                return response()->json(['success' => false, 'message' => 'Please wait for 60 secs for resend new OTP']);
             }
-
             try {
-                $apiResponse = $this->cryptoAPI->make_api_call('send_otp', [
-                    "Type" => "1",
-                    "Email" => Auth::user()->email
-                ]);
+                $otp = random_int(100000, 999999);
+                $userModel = User::find(Auth::id());
+                $userModel->otp_sent_at = time();
+                $userModel->login_otp = $otp;
+                $userModel->save();
 
-                $logData = [
-                    'request' => [
-                        "Type" => "1",
-                        "Email" => Auth::user()->email
-                    ],
-                    'response' => $apiResponse
-                ];
-                \Log::info('cryptoResponse:resend_confirm_otp[' . $user->email . ']' . json_encode($logData));
+                Mail::send('templates.emails.accountverify', ['token' => $otp], function ($message) use ($request) {
+                    $message->to(Auth::user()->email);
+                    $message->subject('Account Verification OTP');
+                });
 
-                if ($apiResponse->message == 'success' && isset($apiResponse->details)) {
-                    Auth::user()->otp_sent_at = time();
-                    Auth::user()->save();
-                    return response()->json(['success' => true, 'message' => $apiResponse->details]);
-                } elseif ($apiResponse->message == 'failed' && isset($apiResponse->details)) {
-                    return response()->json(['success' => false, 'message' => $apiResponse->details]);
-                } else {
-                    return response()->json(['success' => false, 'message' => 'Something went wrong.']);
-                }
+                return response()->json(['success' => true, 'message' => 'OTP sent successfully']);
             } catch (Exception $e) {
                 Log::error('resendConfirmOTP[send_otp] API Exception : ', ['message' => $e->getMessage()]);
                 return response()->json(['success' => false, 'message' => 'Server did not respond. Please try after sometime.']);
@@ -433,7 +393,7 @@ class AuthController extends Controller
 
     public function resendAdminLoginOTP(Request $request)
     {
-        if (\Auth::check()) {
+        if (Auth::check()) {
             $user = User::where('email', Auth::user()->email)->first();
             $currentTime = time();
             $time = $user->otp_sent_at;
@@ -442,9 +402,10 @@ class AuthController extends Controller
             }
             try {
                 $otp = random_int(100000, 999999);
-                Auth::user()->login_otp = $otp;
-                Auth::user()->otp_sent_at = time();
-                Auth::user()->save();
+                $userModel = User::find(Auth::id());
+                $userModel->login_otp = $otp;
+                $userModel->otp_sent_at = time();
+                $userModel->save();
                 Mail::send('templates.emails.adminLoginOTP', ['token' => $otp], function ($message) use ($request) {
                     $message->to(Auth::user()->email);
                     $message->subject('Admin Login OTP');
@@ -460,7 +421,7 @@ class AuthController extends Controller
 
     public function adminLoginConfirm(Request $request)
     {
-        if (\Auth::check()) {
+        if (Auth::check()) {
             $validatedData = $request->validate([
                 'admin_login_otp' => 'required|max:6'
             ], [
@@ -473,10 +434,11 @@ class AuthController extends Controller
                 if (time() > ($otp_sent_at + 180)) {
                     return redirect()->back()->withErrors(['admin_login_otp' => 'OTP has been expired']);
                 } elseif (Auth::user()->login_otp == $admin_login_otp) {
-                    Auth::user()->login_otp = 0;
-                    Auth::user()->otp_sent_at = null;
-                    Auth::user()->save();
-                    add_admin_logs(Auth::user()->id, 'login', "Admin " . Auth::user()->username . " has login successfully");
+                    $user = User::find(Auth::id());
+                    $user->login_otp = 0;
+                    $user->otp_sent_at = null;
+                    $user->save();
+                    add_admin_logs($user->id, 'login', "Admin " . $user->username . " has login successfully");
                     return redirect()->route('admin.dashboard');
                 } else {
                     return redirect()->back()->withErrors(['admin_login_otp' => 'Please enter valid OTP']);
