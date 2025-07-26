@@ -329,7 +329,8 @@ table.dataTable {
 }
 
 .nk-auth-container.bg-white {
-    background-color: #0B2139 !important;
+    /* background-color: #0B2139 !important; */
+    background-color: #003261 !important;
 }
 
 .nk-auth-container p {
@@ -368,4 +369,10 @@ table.dataTable {
 .btn-darkblue {
     background-color: #0d466c !important;
     border-color: #0d466c !important;
+}
+
+/* new css */
+
+.nk-split.loginRow{
+    flex-direction: row-reverse;
 }

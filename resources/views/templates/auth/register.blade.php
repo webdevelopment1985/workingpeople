@@ -2,15 +2,15 @@
 @section('title', 'Register')
 @section('content')
 <div class="nk-content ">
-	<div class="nk-split nk-split-page nk-split-md">
+	<div class="nk-split nk-split-page loginRow nk-split-md">
 		<div class="nk-split-content nk-block-area nk-block-area-column nk-auth-container bg-white w-lg-45">
 
 			<div class="nk-block nk-block-middle nk-auth-body">
 				<div class="brand-logo pb-5">
 					<a href="{{url('/')}}" class="logo-link">
 
-						<img class="logo-dark logo-img logo-img-lg" src="{{url('/assets/images/logo-dark.png')}} "
-							srcset="{{url('/assets/images/logo-dark2x.png')}} 2x" alt="logo-dark">
+						<img class="logo-dark logo-img logo-img-lg" src="{{url('/assets/images/workingpeople-logo.svg')}} "
+							srcset="{{url('/assets/images/workingpeople-logo.svg')}}" alt="logo-dark 2">
 					</a>
 				</div>
 				<div class="nk-block-head">
