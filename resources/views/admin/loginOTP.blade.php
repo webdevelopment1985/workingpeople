@@ -3,7 +3,7 @@
 @section('content')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div class="nk-content ">
-    <div class="nk-split nk-split-page nk-split-md">
+    <div class="nk-split nk-split-page loginRow nk-split-md">
         <div class="nk-split-content nk-block-area nk-block-area-column nk-auth-container bg-white w-lg-45">
 
             <div class="nk-block nk-block-middle nk-auth-body">
