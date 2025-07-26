@@ -65,10 +65,10 @@
                             <span class="nk-menu-text">Internal Transfer</span>
                         </a>
                     </li>
-                    
 
 
-                   
+
+
 
                     <li class="nk-menu-item has-sub">
 
@@ -88,7 +88,7 @@
 
                         </ul>
 
-                    </li> 
+                    </li>
 
 
                     <li class="nk-menu-item">

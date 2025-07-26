@@ -22,22 +22,12 @@
                     </div>
                 </div><!-- .nk-block-head -->
 
-                @if( isset($email) )
-                <div class="alert alert-success alert-block" role="alert">
-                    <button class="close" data-dismiss="alert"></button>
-                    Please verify your account : {{$email}} before login
-                </div>
-                @endif
-
                 @if( Session::has("success") )
                 <div class="alert alert-success alert-block" role="alert">
                     <button class="close" data-dismiss="alert"></button>
                     {{ Session::get("success") }}
                 </div>
                 @endif
-
-
-
 
                 @if( Session::has("error") )
                 <div class="alert alert-danger alert-block" role="alert">

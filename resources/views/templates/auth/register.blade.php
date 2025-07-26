@@ -10,7 +10,7 @@
 					<a href="{{url('/')}}" class="logo-link">
 
 						<img class="logo-dark logo-img logo-img-lg" src="{{url('/assets/images/workingpeople-logo.svg')}} "
-							srcset="{{url(/assets/images/workingpeople-logo.svg')}} 2x" alt="logo-dark">
+							srcset="{{url('/assets/images/workingpeople-logo.svg')}}" alt="logo-dark 2">
 					</a>
 				</div>
 				<div class="nk-block-head">
