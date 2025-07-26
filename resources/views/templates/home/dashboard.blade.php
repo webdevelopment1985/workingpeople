@@ -258,7 +258,7 @@
 
                                         <div class="lrbtn mb-4">
                                             <label class="textToBeCopied fw-bold mb-0"
-                                                id="referral_link"><?=$referral_link?></label>
+                                                id="referral_link"><?= $referral_link ?></label>
                                         </div>
                                         <div class="invest-data ">
                                             <div class="invest-data-amount g-2 justify-content-start">
@@ -349,8 +349,8 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                            
-                                            ?>
+
+                                                    ?>
                                                 </tbody>
                                             </table>
 

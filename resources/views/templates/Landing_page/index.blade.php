@@ -4,7 +4,7 @@
 
 <div class="back-to-top-wrapper">
    <button id="back_to_top" type="button" class="back-to-top-btn">
-      <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="">
          <path d="M11 6L6 1L1 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
    </button>
@@ -17,7 +17,7 @@
    <div class="offcanvas__wrapper">
       <div class="offcanvas__close">
          <button class="offcanvas__close-btn offcanvas-close-btn">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="">
                <path d="M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                <path d="M1 1L11 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
@@ -27,7 +27,8 @@
          <div class="offcanvas__top mb-50 d-flex justify-content-between align-items-center">
             <div class="offcanvas__logo logo">
                <a href="{{ route('Landingpage') }}">
-                  <img src="{{ asset('assets/images/logo/logo-black.png') }}" alt="logo">
+                  <img class="logo-dark logo-img logo-img-lg" src="{{url('/assets/images/workingpeople-logo.svg')}} "
+                     srcset="{{url('/assets/images/workingpeople-logo.svg')}}" alt="logo-dark 2">
                </a>
             </div>
          </div>
@@ -51,7 +52,8 @@
    <div class="tp-header-box-3">
       <div class="tp-header-logo-3 d-none d-xl-block">
          <a href="javascript:void(0)">
-            <img src="{{ asset('assets/images/logo/logo-black.png') }}" alt="">
+            <img class="logo-dark logo-img logo-img-lg" src="{{url('/assets/images/workingpeople-logo.svg')}} "
+               srcset="{{url('/assets/images/workingpeople-logo.svg')}}" alt="logo-dark 2">
          </a>
       </div>
 
@@ -65,7 +67,8 @@
                      <div class="tp-main-menu home-3 align-items-center justify-content-center d-flex">
                         <div class="tp-main-menu-logo d-block d-xl-none">
                            <a href="javascript:void(0)">
-                              <img src="{{ asset('assets/images/logo/logo-black.png') }}" alt="">
+                              <img class="logo-dark logo-img logo-img-lg" src="{{url('/assets/images/workingpeople-logo.svg')}} "
+                                 srcset="{{url('/assets/images/workingpeople-logo.svg')}}" alt="logo-dark 2">
                            </a>
                         </div>
                         <div class="d-none d-xl-flex">
@@ -118,7 +121,8 @@
             <div class="col-xl-3 col-6">
                <div class="tp-header-logo-2 p-relative">
                   <a href="{{ route('Landingpage') }}">
-                     <img src="{{ asset('assets/images/logo/logo-black.png') }}" alt="">
+                     <img class="logo-dark logo-img logo-img-lg" src="{{url('/assets/images/workingpeople-logo.svg')}} "
+                        srcset="{{url('/assets/images/workingpeople-logo.svg')}}" alt="logo-dark 2">
                   </a>
                </div>
             </div>
@@ -505,7 +509,8 @@
                <div class="col-md-4">
                   <div class="tp-footer-widget tp-footer-3-col-1 mb-50">
                      <div class="tp-footer-logo mb-30">
-                        <a href="{{ route('Landingpage') }}"> <img src="{{ asset('assets/images/logo/logo-black.png') }}" alt=""></a>
+                        <a href="{{ route('Landingpage') }}"> <img class="logo-dark logo-img logo-img-lg" src="{{url('/assets/images/workingpeople-logo.svg')}} "
+                              srcset="{{url('/assets/images/workingpeople-logo.svg')}}" alt="logo-dark 2"></a>
                      </div>
                      <div class="tp-footer-widget-content">
                         <p>FinTrade Pool is a comprehensive investment platform dedicated to empowering clients with transparent, expert-guided investment solutions. With a focus on sustainable wealth creation, it offers diverse opportunities, including forex and alternative assets.</p>
