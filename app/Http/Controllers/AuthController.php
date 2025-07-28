@@ -329,10 +329,9 @@ class AuthController extends Controller
             $validatedData = $request->validate([
                 'confirm_otp' => 'required|max:6'
             ], [
-                'confirm_otp.required' => 'Please enter otp sent on your email'
+                'confirm_otp.required' => 'Please enter otp sent on your email address',
             ]);
             $confirm_otp = $request->confirm_otp;
-            $user = Auth::user();
             try {
                 $userModel = User::find(Auth::id());
                 if ($userModel->login_otp > 0) {
@@ -341,7 +340,8 @@ class AuthController extends Controller
                     if ($currentTime > ($otp_sent_at + 300)) { // 5 minutes
                         return redirect()->back()->withErrors(['confirm_otp' => 'OTP has been expired. Please try again.']);
                     } elseif ($userModel->login_otp == $confirm_otp) {
-                        $userModel->login_otp = null;
+                        $userModel->login_otp = 0;
+                        $userModel->is_verified = 1;
                         $userModel->otp_sent_at = null;
                         $userModel->save();
                         DB::select('CALL addLevelRecord(?)', [$userModel->id]);
@@ -350,6 +350,8 @@ class AuthController extends Controller
                     } else {
                         return redirect()->back()->withErrors(['confirm_otp' => 'Please enter valid OTP']);
                     }
+                } else {
+                    return redirect()->back()->withErrors(['confirm_otp' => 'Please enter valid OTP']);
                 }
             } catch (Exception $e) {
                 Log::error('postRegisterFormConfirm[verify_otp] API Exception : ', ['message' => $e->getMessage()]);
@@ -366,8 +368,8 @@ class AuthController extends Controller
             $user = User::where('email', Auth::user()->email)->first();
             $currentTime = time();
             $time = $user->otp_sent_at;
-            if ($currentTime >= $time && $time >= $currentTime - (60 + 5)) {
-                return response()->json(['success' => false, 'message' => 'Please wait for 60 secs for resend new OTP']);
+            if ($currentTime >= $time && $time >= $currentTime - (5 + 5)) {
+                return response()->json(['success' => false, 'message' => 'Please wait for 10 secs for resend new OTP']);
             }
             try {
                 $otp = random_int(100000, 999999);

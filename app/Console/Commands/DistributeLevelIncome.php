@@ -29,8 +29,8 @@ class DistributeLevelIncome extends Command
      */
     public function handle()
     {
-         $lastMonthEnd = Carbon::now()->subMonth()->endOfMonth();
-        
+        $lastMonthEnd = Carbon::now()->subMonth()->endOfMonth();
+
         $invoices = DB::table('invoices')
             ->where('expire', 0)
             ->where('user_id', '!=', 176)
@@ -60,9 +60,9 @@ class DistributeLevelIncome extends Command
         ];
 
         $results = JoiningHistory::where('user_id', $userId) // Condition for user_id in joining_history
-            ->where('for_user_id','!=', 1)
-            ->where('for_user_id','!=', 176)
-            // ->where('for_user_id','!=', 173)
+            ->where('parent_user_id', '!=', 1)
+            ->where('parent_user_id', '!=', 176)
+            // ->where('parent_user_id','!=', 173)
             ->whereHas('forUser', function ($query) {
                 $query->where('is_paid', 1); // Condition for users.is_paid
                 $query->select('id', 'username', 'name', 'email', 'created_at');
@@ -94,26 +94,26 @@ class DistributeLevelIncome extends Command
             foreach ($results as $joiningHistory) {
                 $percent = $matrix[count($results)][$key];
                 $amount = ($percent / 100) * $adjustedDistributionAmount;
-                
-                if($joiningHistory->for_user_id == 176 || $userId == 176){
+
+                if ($joiningHistory->parent_user_id == 176 || $userId == 176) {
                     break;
                 }
                 // Call the stored procedure and fetch the output parameter
-                //DB::statement('CALL calculate_remaining_amount(?, @remaining_amount)', [$joiningHistory->for_user_id]);
+                //DB::statement('CALL calculate_remaining_amount(?, @remaining_amount)', [$joiningHistory->parent_user_id]);
                 // Retrieve the output parameter
                 // $remainingAmount = DB::select('SELECT @remaining_amount AS remaining_amount')[0]->remaining_amount;
 
                 //if ($remainingAmount > 0) {
-                    $amount =  $amount;
-                    if ($amount > 0) {
-                        $narration = 'Level Income added from Level ' . $key . ' user ' . $joiningHistory->User->username . ' for invoice #' . $invoiceid;
-                        $transaction = new Transaction();
-                        $transaction->updateUserBalance($joiningHistory->for_user_id, $amount, 0, 'USDT', $narration, 'credit', 'level-income', 1, $invoiceid, null);
-                        $key++;
-                    }
-               // }
+                $amount =  $amount;
+                if ($amount > 0) {
+                    $narration = 'Level Income added from Level ' . $key . ' user ' . $joiningHistory->User->username . ' for invoice #' . $invoiceid;
+                    $transaction = new Transaction();
+                    $transaction->updateUserBalance($joiningHistory->parent_user_id, $amount, 0, 'USDT', $narration, 'credit', 'level-income', 1, $invoiceid, null);
+                    $key++;
+                }
+                // }
 
-               
+
             }
         }
         return;

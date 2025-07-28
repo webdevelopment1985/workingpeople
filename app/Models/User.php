@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use App\Models\Packages;
 use App\Models\Invoice;
 use App\Models\JoiningHistory;
 use Illuminate\Http\Request;
- 
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -41,10 +42,10 @@ class User extends Authenticatable
 
 
     /**
-    * The attributes that should be hidden for serialization.
-    *
-    * @var array<int, string>
-    */
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = [
         'password',
         'remember_token',
@@ -52,10 +53,10 @@ class User extends Authenticatable
 
 
     /**
-    * The attributes that should be cast.
-    *
-    * @var array<string, string>
-    */
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
@@ -63,13 +64,13 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        if(Auth::user()->users_type==2) {
+        if (Auth::user()->users_type == 2) {
             return true;
         }
         return false;
     }
 
-    
+
 
     public function getSriAddress()
     {
@@ -82,7 +83,7 @@ class User extends Authenticatable
         $address = '';
         return $address;
     }
-    
+
     public function getUsdtAddress()
     {
         $address = '';
@@ -95,7 +96,7 @@ class User extends Authenticatable
             if (isset($responseAccnt->message) && $responseAccnt->message == 'success') {
                 $address = $responseAccnt->usdtAddress ?? '';
             }
-        }    
+        }
         return $address;
     }
 
@@ -109,31 +110,34 @@ class User extends Authenticatable
             ]);
             $symbol = 'USDT';
             // dd( $apiResponse);
-            if($apiResponse->message == 'success' && $apiResponse->wBalance) {
+            if ($apiResponse->message == 'success' && $apiResponse->wBalance) {
                 $wbalance = $apiResponse->wBalance;
-               
-               $filteredItems = array_filter($wbalance, function($item) use ($symbol) {
-                   
-                   return $item->currrency == $symbol;
-               });
-              
-               $balance = array_values($filteredItems)[0]->balance ?? 0;
-           }
-        }    
+
+                $filteredItems = array_filter($wbalance, function ($item) use ($symbol) {
+
+                    return $item->currrency == $symbol;
+                });
+
+                $balance = array_values($filteredItems)[0]->balance ?? 0;
+            }
+        }
         return $balance;
     }
-    
+
     public function getBalance($type)
     {
         $balance = 0;
-        switch(strtolower($type)){
+        switch (strtolower($type)) {
             case 'usdt':
-                $balance = Auth::user()->wallet_amount;break;
+                $balance = Auth::user()->wallet_amount;
+                break;
             case 'withdrawable_amount':
-                    $balance = Auth::user()->withdrawable_amount;break;
+                $balance = Auth::user()->withdrawable_amount;
+                break;
             default:
-                $balance =0;break;
-        }        
+                $balance = 0;
+                break;
+        }
         return $balance;
     }
 
@@ -143,19 +147,23 @@ class User extends Authenticatable
         return $this->hasMany(Deposit::class);
     }
 
-    public function totalDepositByCurrency($currency){
-        return $this->deposits()->where('status',1)->where('currency', $currency)->sum('amount');
-    }
-    
-    public function totalPurchase(){
-        return $this->invoices()->where('status',1)->sum('amount');
+    public function totalDepositByCurrency($currency)
+    {
+        return $this->deposits()->where('status', 1)->where('currency', $currency)->sum('amount');
     }
 
-    public function totalIncome($type){
-        return $this->transactions()->where('status',1)->where('type', 'credit')->where('trans_type', $type)->sum('amount');
+    public function totalPurchase()
+    {
+        return $this->invoices()->where('status', 1)->sum('amount');
     }
 
-    public function referralLink(){
+    public function totalIncome($type)
+    {
+        return $this->transactions()->where('status', 1)->where('type', 'credit')->where('trans_type', $type)->sum('amount');
+    }
+
+    public function referralLink()
+    {
         return route('register', ['sponsor' => Auth::user()->username]);
     }
 
@@ -186,7 +194,7 @@ class User extends Authenticatable
 
     public function withdrawRequest($confirmKey, $status)
     {
-        return $this->userRequests()->where('status',$status)->where('confirm_key', $confirmKey)->get();
+        return $this->userRequests()->where('status', $status)->where('confirm_key', $confirmKey)->get();
     }
 
     public function sentTransfers()
@@ -201,6 +209,6 @@ class User extends Authenticatable
 
     public function myDownlineUsers()
     {
-        return $this->hasMany(JoiningHistory::class, 'for_user_id', 'id');
+        return $this->hasMany(JoiningHistory::class, 'parent_user_id', 'id');
     }
 }

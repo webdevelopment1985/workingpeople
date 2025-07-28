@@ -62,11 +62,12 @@ class CryptoAPI
     {
         $privateKey = openssl_pkey_get_private($this->__privateKeyString);
         if ($privateKey === false) {
-            die('Invalid private key !!');
+            // die('Invalid private key !!');
         }
-        openssl_sign($inputString, $signature, $privateKey, OPENSSL_ALGO_SHA256);
-        openssl_free_key($privateKey);
-        return base64_encode($signature);
+        // openssl_sign($inputString, $signature, $privateKey, OPENSSL_ALGO_SHA256);
+        // openssl_free_key($privateKey);
+        // return base64_encode($signature);
+        return '';
     }
 
     public function make_api_call($action, $input)
@@ -75,7 +76,8 @@ class CryptoAPI
             case 'send_otp':
                 if ($input['Type'] == 9) {
                     $inputString = $input['Type'] . $input['Email'] . $input['Amount'] .  $input['Currency'] . '';
-                    $input['Signature'] = $this->getSignature($inputString);
+                    // $input['Signature'] = $this->getSignature($inputString);
+                    $input['Signature'] = '';
                     $curlPostData = '';
                     $curlPostData .= '{';
                     $curlPostData .= '"Type":"' . $input['Type'] . '",';
