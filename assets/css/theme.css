@@ -55,7 +55,7 @@
 } */
 
 .icon-status-info:after {
-    background: #87edf7;
+    background: #A0CBEF;
 }
 
 .nk-ecwg .title {
@@ -228,7 +228,7 @@ label.overline-title.overline-title-alt.mb-2 {
 
 .nk-menu-sub .active>.nk-menu-link,
 .current-page>.nk-menu-link {
-    color: #87edf7;
+    color: #A0CBEF;
 }
 
 .nk-header.is-dark .user-name {
@@ -348,7 +348,7 @@ table.dataTable {
     color: #aebccc;
 }
 .nk-auth-container a {
-    color: #87EDF7 !important;
+    color: #A0CBEF !important;
 }
 .nk-auth-container .custom-control-label {
     font-size: 14px;

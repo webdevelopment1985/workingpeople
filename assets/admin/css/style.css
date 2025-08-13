@@ -1741,7 +1741,7 @@ html.menu-opened body {
 }
 .sidebar-menu li a:hover {
     /* color: #5ae8ff; */
-	color: #87EDF7 !important;
+	color: #A0CBEF !important;
 }
 .sidebar-menu > ul > li > a:hover {
 	/* background-color: #c4ab54;
@@ -1760,7 +1760,7 @@ html.menu-opened body {
 }
 .sidebar-menu ul ul a.active {
 	/* color: #20e3ff;  chnage sub menu active color*/
-	color: #87EDF7 !important;
+	color: #A0CBEF !important;
 }
 .menu-title {
     /* color: #c4ab54; */
@@ -4442,7 +4442,7 @@ table.dataTable thead th, table.dataTable thead td {
     color: #056FB4 !important /* color: #c4ab54 !important */;
 }
 .progress.progress-sm .progress-bar {
-    background-color: #87EDF7  !important;
+    background-color: #A0CBEF  !important;
 }
 .dash-widget-info h6.text-muted {
     font-weight: 600;
