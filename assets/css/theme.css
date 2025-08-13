@@ -55,7 +55,7 @@
 } */
 
 .icon-status-info:after {
-    background: #A0CBEF;
+    background: #3E80FF;
 }
 
 .nk-ecwg .title {
@@ -72,7 +72,7 @@
 }
 
 .liveprice {
-       background: #eafaff;
+       background: #edf7ff;
     border: 2px solid #456997;
 }
 
@@ -228,7 +228,7 @@ label.overline-title.overline-title-alt.mb-2 {
 
 .nk-menu-sub .active>.nk-menu-link,
 .current-page>.nk-menu-link {
-    color: #A0CBEF;
+    color: #3E80FF;
 }
 
 .nk-header.is-dark .user-name {
@@ -348,7 +348,7 @@ table.dataTable {
     color: #aebccc;
 }
 .nk-auth-container a {
-    color: #A0CBEF !important;
+    color: #3E80FF !important;
 }
 .nk-auth-container .custom-control-label {
     font-size: 14px;
