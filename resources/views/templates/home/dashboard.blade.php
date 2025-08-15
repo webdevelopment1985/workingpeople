@@ -244,7 +244,7 @@
                                     <div class="card-title-group align-start mb-0">
                                         <div class="card-title">
                                             <div class="icon-sec">
-                                                <img src="{{url('/assets/images/new/referral.png')}}" alt="">
+                                                <img src="{{url('/assets/images/new/referral.svg')}}" alt="">
                                             </div>
                                             <h6 class="title">Referral Link</h6>
                                         </div>
