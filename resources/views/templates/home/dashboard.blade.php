@@ -281,7 +281,7 @@
                             </div><!-- .card -->
                         </div>
 
-                        <div class="col-md-4" style="display:none;">
+                        <div class="col-md-4" style="display:block;">
                             <div class="card card-bordered card-full card-ico">
                                 <div class="card-inner">
                                     <div class="card-title-group align-start mb-0">
@@ -318,7 +318,7 @@
 
                     </div><!-- .row -->
 
-                    <div class="row g-gs" style="display:none">
+                    <div class="row g-gs" style="display:block">
                         <div class="col-md-12">
                             <div class="card card-bordered card-full card-ico referbox">
                                 <div class="card-inner">
@@ -335,24 +335,27 @@
                                         <div class="lrbtn mb-3">
 
 
-                                            <table class="table table-bordered table-hover table-striped">
-                                                <thead class="table-dark">
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Name</th>
-                                                        <th>Min. Amount</th>
-                                                        <th>Max Amount</th>
-                                                        <th>Monthly Return (%)</th>
-                                                        <th>Lock Period (months)</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
+                                            <div class="table-responsive mt-4">
+                                                <!-- Added table-responsive for better table handling on small screens -->
+                                                <table id="transactionTable"
+                                                    class="table table-bordered table-striped w-100">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="nk-tb-col">Sr No</th>
+                                                            <th class="nk-tb-col">Date</th>
+                                                            <th class="nk-tb-col">Txn ID</th>
+                                                            <th class="nk-tb-col">Mode</th>
+                                                            <th class="nk-tb-col">Amount</th>
+                                                            <th class="nk-tb-col">Type</th>
+                                                            <th class="nk-tb-col">Narration</th>
+                                                            <th class="nk-tb-col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
 
-                                                    ?>
-                                                </tbody>
-                                            </table>
+                                                </table>
+                                            </div>
 
                                         </div>
 
