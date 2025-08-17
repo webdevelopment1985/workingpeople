@@ -61,7 +61,7 @@
                                     <div class="card-title-group align-start mb-0">
                                         <div class="card-title">
                                             <div class="icon-sec">
-                                                <img src="{{url('/assets/images/new/usdt_wallet.svg')}}" alt="">
+                                                <img src="{{url('/assets/images/nicon/USDT_Wallet4.svg')}}" alt="">
                                             </div>
                                             <h6 class="title">Deposit Wallet</h6>
                                             <p>Deposit USDT balance</p>
@@ -90,7 +90,7 @@
                                     <div class="card-title-group align-start mb-0">
                                         <div class="card-title">
                                             <div class="icon-sec">
-                                                <img src="{{url('/assets/images/new/total_income.svg')}}" alt="">
+                                                <img src="{{url('/assets/images/nicon/total_deposit1.svg')}}" alt="">
                                             </div>
                                             <h6 class="title">Income Wallet</h6>
                                             <p>Income wallet</p>
@@ -118,7 +118,7 @@
                                     <div class="card-title-group align-start mb-0">
                                         <div class="card-title">
                                             <div class="icon-sec">
-                                                <img src="{{url('/assets/images/new/total_deposit.svg')}}" alt="">
+                                                <img src="{{url('/assets/images/nicon/total_income5.svg')}}" alt="">
                                             </div>
                                             <h6 class="title">Total Deposits</h6>
                                             <p>USDT deposit</p>
@@ -151,7 +151,7 @@
                                     <div class="card-title-group align-start mb-0">
                                         <div class="card-title">
                                             <div class="icon-sec">
-                                                <img src="{{url('/assets/images/new/total_purchase.svg')}}" alt="">
+                                                <img src="{{url('/assets/images/nicon/total_purchase7.svg')}}" alt="">
                                             </div>
                                             <h6 class="title">Total Investment</h6>
                                             <p>Total Investment</p>
@@ -187,7 +187,7 @@
                                     <div class="card-title-group align-start mb-0">
                                         <div class="card-title">
                                             <div class="icon-sec">
-                                                <img src="{{url('/assets/images/new/level_income.svg')}}" alt="">
+                                                <img src="{{url('/assets/images/nicon/level_income2.svg')}}" alt="">
                                             </div>
                                             <h6 class="title">Level Income</h6>
                                             <p>Total Level income</p>
@@ -215,7 +215,7 @@
                                     <div class="card-title-group align-start mb-0">
                                         <div class="card-title">
                                             <div class="icon-sec">
-                                                <img src="{{url('/assets/images/new/roi_income.svg')}}" alt="">
+                                                <img src="{{url('/assets/images/nicon/ROI_income6.svg')}}" alt="">
                                             </div>
                                             <h6 class="title">Roi Income</h6>
                                             <p>Total Roi Income</p>
@@ -244,7 +244,7 @@
                                     <div class="card-title-group align-start mb-0">
                                         <div class="card-title">
                                             <div class="icon-sec">
-                                                <img src="{{url('/assets/images/new/referral.svg')}}" alt="">
+                                                <img src="{{url('/assets/images/nicon/referral_bonus3.svg')}}" alt="">
                                             </div>
                                             <h6 class="title">Referral Link</h6>
                                         </div>
@@ -287,7 +287,7 @@
                                     <div class="card-title-group align-start mb-0">
                                         <div class="card-title">
                                             <div class="icon-sec">
-                                                <img src="{{url('/assets/images/global-binary.png')}}" alt="">
+                                                <img src="{{url('/assets/images/nicon/wallet_transfer8.svg')}}" alt="">
                                             </div>
                                             <h6 class="title">Wallet Transfer</h6>
                                             <p>Transfer your funds into withdraw wallet</p>
@@ -352,6 +352,66 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        <tr>
+                                                            <td class="nk-tb-col">Sr No</td>
+                                                            <td class="nk-tb-col">Date</td>
+                                                            <td class="nk-tb-col">Txn ID</td>
+                                                            <td class="nk-tb-col">Mode</td>
+                                                            <td class="nk-tb-col">Amount</td>
+                                                            <td class="nk-tb-col">Type</td>
+                                                            <td class="nk-tb-col">Narration</td>
+                                                            <td class="nk-tb-col">Status</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="nk-tb-col">Sr No</td>
+                                                            <td class="nk-tb-col">Date</td>
+                                                            <td class="nk-tb-col">Txn ID</td>
+                                                            <td class="nk-tb-col">Mode</td>
+                                                            <td class="nk-tb-col">Amount</td>
+                                                            <td class="nk-tb-col">Type</td>
+                                                            <td class="nk-tb-col">Narration</td>
+                                                            <td class="nk-tb-col">Status</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="nk-tb-col">Sr No</td>
+                                                            <td class="nk-tb-col">Date</td>
+                                                            <td class="nk-tb-col">Txn ID</td>
+                                                            <td class="nk-tb-col">Mode</td>
+                                                            <td class="nk-tb-col">Amount</td>
+                                                            <td class="nk-tb-col">Type</td>
+                                                            <td class="nk-tb-col">Narration</td>
+                                                            <td class="nk-tb-col">Status</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="nk-tb-col">Sr No</td>
+                                                            <td class="nk-tb-col">Date</td>
+                                                            <td class="nk-tb-col">Txn ID</td>
+                                                            <td class="nk-tb-col">Mode</td>
+                                                            <td class="nk-tb-col">Amount</td>
+                                                            <td class="nk-tb-col">Type</td>
+                                                            <td class="nk-tb-col">Narration</td>
+                                                            <td class="nk-tb-col">Status</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="nk-tb-col">Sr No</td>
+                                                            <td class="nk-tb-col">Date</td>
+                                                            <td class="nk-tb-col">Txn ID</td>
+                                                            <td class="nk-tb-col">Mode</td>
+                                                            <td class="nk-tb-col">Amount</td>
+                                                            <td class="nk-tb-col">Type</td>
+                                                            <td class="nk-tb-col">Narration</td>
+                                                            <td class="nk-tb-col">Status</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="nk-tb-col">Sr No</td>
+                                                            <td class="nk-tb-col">Date</td>
+                                                            <td class="nk-tb-col">Txn ID</td>
+                                                            <td class="nk-tb-col">Mode</td>
+                                                            <td class="nk-tb-col">Amount</td>
+                                                            <td class="nk-tb-col">Type</td>
+                                                            <td class="nk-tb-col">Narration</td>
+                                                            <td class="nk-tb-col">Status</td>
+                                                        </tr>
                                                     </tbody>
 
                                                 </table>
