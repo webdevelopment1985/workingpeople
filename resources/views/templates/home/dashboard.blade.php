@@ -324,13 +324,18 @@
                                 <div class="card-inner">
 
                                     <div class="card-title-group align-start mb-0">
-                                        <div class="card-title">
-
+                                        <div class="card-title pl-0">
+                                            <h6 class="title">Order List</h6>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ultrices lectus sem.</p>
+                                            
                                         </div>
-
+                                        <div class="card-tools">
+                                            <em class="card-hint icon ni ni-help-fill" data-toggle="tooltip"
+                                                data-placement="left" title="Total Roi Income"></em>
+                                        </div>
                                     </div>
 
-                                    <div class="card-inner px-0 pt-5 mt-0 text-left">
+                                    <div class="card-inner px-0 pt-0 mt-0 text-left">
 
                                         <div class="lrbtn mb-3">
 
