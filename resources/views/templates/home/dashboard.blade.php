@@ -338,7 +338,7 @@
                                             <div class="table-responsive mt-4">
                                                 <!-- Added table-responsive for better table handling on small screens -->
                                                 <table id="transactionTable"
-                                                    class="table table-bordered table-striped w-100">
+                                                    class="table table-bordered table-striped w-100 dataTable">
                                                     <thead>
                                                         <tr>
                                                             <th class="nk-tb-col">Sr No</th>
